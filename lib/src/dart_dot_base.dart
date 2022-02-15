@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 abstract class Renderable {
   String render();
@@ -28,13 +29,15 @@ ${edges.map((edge) => edge.render()).join('\n')}
 }
 
 class Node implements Renderable {
+  static Random _rnd = Random();
+
   late final String name;
   final Map<String, String> attributes = {};
 
   Node(this.name);
 
   Node.from(object, [String? label]) {
-    this.name = object.hashCode.toString();
+    this.name = _rnd.nextInt(1500000).toString();
     this.attributes['label'] = label ?? object.toString();
   }
 
