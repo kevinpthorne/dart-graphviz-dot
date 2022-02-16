@@ -29,7 +29,7 @@ ${edges.map((edge) => edge.render()).join('\n')}
 }
 
 class Node implements Renderable {
-  static Random _rnd = Random();
+  static final Random _rnd = Random();
 
   late final String name;
   final Map<String, String> attributes = {};
@@ -37,14 +37,24 @@ class Node implements Renderable {
   Node(this.name);
 
   Node.from(object, [String? label]) {
-    this.name = _rnd.nextInt(1500000).toString();
-    this.attributes['label'] = label ?? object.toString();
+    name = _rnd.nextInt(1500000).toString();
+    attributes['label'] = label ?? object.toString();
   }
+
+  on(Digraph graph) {
+    graph.nodes.add(this);
+    return this;
+  }
+
+  String _escape(String attr) =>
+      attr.replaceAll(r"\", r"\\").replaceAll('"', r'\"');
 
   @override
   String render() {
-    final attributes = this.attributes.entries
-        .map((entry) => '${entry.key}="${entry.value}"')
+    final attributes = this
+        .attributes
+        .entries
+        .map((entry) => '${entry.key}="${_escape(entry.value)}"')
         .join(',');
     return '  $name [$attributes];';
   }
@@ -55,6 +65,17 @@ class Edge implements Renderable {
   final Node to;
 
   Edge(this.from, this.to);
+
+  on(Digraph graph) {
+    if (!graph.nodes.contains(from)) {
+      from.on(graph);
+    }
+    if (!graph.nodes.contains(to)) {
+      to.on(graph);
+    }
+    graph.edges.add(this);
+    return this;
+  }
 
   @override
   String render() => '${from.name} -> ${to.name};';
