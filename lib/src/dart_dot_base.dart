@@ -19,6 +19,7 @@ class Digraph implements Renderable {
 
   @override
   String render() => """digraph $name {
+ordering = out;
 ${nodes.map((node) => node.render()).join('\n')}
 ${edges.map((edge) => edge.render()).join('\n')}
 }""";

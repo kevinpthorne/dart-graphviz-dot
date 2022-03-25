@@ -26,12 +26,12 @@ void main() {
 
     test('Empty Render', () {
       var result = emptyGraph.render();
-      expect(result, equals('digraph test {\n\n\n}'));
+      expect(result, equals('digraph test {\nordering = out;\n\n\n}'));
     });
 
     test('Simple Render', () {
       var result = simpleGraph.render();
-      expect(result, equals('digraph test2 {\nA;\nB;\nA -> B;\n}'));
+      expect(result, equals('digraph test2 {\nordering = out;\n  A [];\n  B [];\nA -> B;\n}'));
     });
   });
 }
